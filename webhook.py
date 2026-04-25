@@ -89,6 +89,13 @@ def get_tasks():
         return jsonify({"task": task})
     return jsonify({"task": None})
 
+@app.route("/send-reply", methods=["POST"])
+def send_reply():
+    data = request.get_json()
+    message = data.get("message", "")
+    send_whatsapp_message(YOUR_NUMBER, message)
+    return jsonify({"status": "sent"})
+
 @app.route("/")
 def home():
     return "Jarvis is running!", 200
