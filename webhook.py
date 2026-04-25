@@ -99,7 +99,12 @@ def send_reply():
 @app.route("/")
 def home():
     return "Jarvis is running!", 200
-
+@app.route("/send-reply", methods=["POST"])
+def send_reply():
+    data = request.get_json()
+    message = data.get("message", "")
+    send_whatsapp_message(YOUR_NUMBER, message)
+    return jsonify({"status": "sent"})
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
