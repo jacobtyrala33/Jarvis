@@ -66,7 +66,6 @@ def receive():
             return jsonify({"status": "ignored"}), 200
         msg = messages[0]
         from_number = msg.get("from", "")
-        logging.info(f"From: {from_number}, Expected: {YOUR_NUMBER}")
         if from_number.replace("+", "") != YOUR_NUMBER.replace("+", ""):
             return jsonify({"status": "ignored"}), 200
         if msg.get("type") == "text":
@@ -99,12 +98,7 @@ def send_reply():
 @app.route("/")
 def home():
     return "Jarvis is running!", 200
-@app.route("/send-reply", methods=["POST"])
-def send_reply():
-    data = request.get_json()
-    message = data.get("message", "")
-    send_whatsapp_message(YOUR_NUMBER, message)
-    return jsonify({"status": "sent"})
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
