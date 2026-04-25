@@ -31,7 +31,7 @@ def ask_claude(message):
         "content-type": "application/json"
     }
     data = {
-        "model": "claude-3-haiku-20240307",
+        "model": "claude-haiku-4-5",
         "max_tokens": 500,
         "system": "You are Jarvis, a helpful WhatsApp assistant. Keep replies short and friendly.",
         "messages": [{"role": "user", "content": message}]
