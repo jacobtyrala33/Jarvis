@@ -11,6 +11,7 @@ YOUR_NUMBER       = "353858105294"
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
+pending_tasks = []
 
 def send_whatsapp_message(to, text):
     url = f"https://graph.facebook.com/v19.0/{PHONE_NUMBER_ID}/messages"
@@ -39,7 +40,6 @@ def ask_claude(message):
     try:
         r = requests.post(url, headers=headers, json=data, timeout=20)
         logging.info(f"Claude status: {r.status_code}")
-        logging.info(f"Claude response: {r.text}")
         if r.status_code == 200:
             result = r.json()
             if "content" in result and len(result["content"]) > 0:
@@ -73,10 +73,21 @@ def receive():
             text = msg["text"]["body"]
             logging.info(f"Message: {text}")
             reply = ask_claude(text)
+            if "TASK:" in reply:
+                pending_tasks.append(text)
+                logging.info(f"Task queued: {text}")
             send_whatsapp_message(from_number, reply)
     except Exception as e:
         logging.error(f"Error: {e}")
     return jsonify({"status": "ok"}), 200
+
+@app.route("/get-tasks", methods=["GET"])
+def get_tasks():
+    if pending_tasks:
+        task = pending_tasks.pop(0)
+        logging.info(f"Task dispatched: {task}")
+        return jsonify({"task": task})
+    return jsonify({"task": None})
 
 @app.route("/")
 def home():
