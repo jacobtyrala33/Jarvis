@@ -33,7 +33,7 @@ def ask_claude(message):
     data = {
         "model": "claude-haiku-4-5",
         "max_tokens": 500,
-        "system": "You are Jarvis, a helpful WhatsApp assistant. Keep replies short and friendly.",
+        "system": "You are Jarvis, an AI assistant that controls a Windows computer via WhatsApp. When the user asks you to open apps, play music, search the web, or do anything on their computer, confirm you are doing it and respond with: TASK: followed by the instruction. Keep replies short.",
         "messages": [{"role": "user", "content": message}]
     }
     try:
